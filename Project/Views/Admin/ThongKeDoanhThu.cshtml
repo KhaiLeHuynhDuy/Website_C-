@@ -1,0 +1,346 @@
+﻿@model Project.Models.ThongKeDoanhThuViewModel
+@using Project.Models
+@{
+    ViewBag.Title = "Thống kê doanh thu";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="~/Content/css_admin/style.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="@Url.Action("Index","Home")">Start</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            @*<div class="input-group">
+                    <input class="form-control" type="text" placeholder="Tìm kiếm..." aria-label="Tìm kiếm..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>*@
+        </form>
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Cài đặt</a></li>
+                    <li><a class="dropdown-item" href="#!">Nhật ký hoạt động</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <<div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="sb-sidenav-menu-heading">Core</div>
+                <a class="nav-link" href="@Url.Action("Index","Admin")">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Dashboard
+                </a>
+                <div class="sb-sidenav-menu-heading">Interface</div>
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                    Account Management
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+
+                </a>
+                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="@Url.Action("CreateNhanVien","Admin")">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
+                            Add Employee
+                        </a>
+                    </nav>
+                </div>
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                    Store Management
+
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                        <a class="nav-link collapsed soluongton" href="@Url.Action("ThongKeSoLuongTon","Admin")">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-box"></i></div>
+                            Inventory
+                            @if (ViewBag.LowInventoryProductCount > 0)
+                            {
+                                <span class="badge badge-danger" style="color:red">@ViewBag.LowInventoryProductCount</span>
+                            }
+
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <a class="nav-link collapsed" href="@Url.Action("ThongKeDoanhThu","Admin")">
+                            <div class="sb-nav-link-icon"> <i class="fa-solid fa-landmark"></i></div>
+                            Revenue
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                    </nav>
+                </div>
+                <div class="sb-sidenav-menu-heading">Add</div>
+
+                <a class="nav-link" href="@Url.Action("Create_SanPham","Admin")">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Add Products
+                </a>
+                <a class="nav-link" href="@Url.Action("Create_DanhMuc","Admin")">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Add Categorys
+                </a>
+            </div>
+        </div>
+        <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:</div>
+            Admin
+        </div>
+    </nav>
+</div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active"></li>
+                    </ol>
+                    <div class="row">
+                    </div>
+                    <h2>Thống kê doanh thu</h2>
+
+                    @using (Html.BeginForm("ThongKeDoanhThu", "Admin", FormMethod.Get))
+                    {
+                        <div>
+                            <label>Year:</label>
+                            @Html.TextBoxFor(model => model.Year, new { @class = "form-control", @id = "Year" })
+                            <label>WeekNum:</label>
+                            @Html.TextBoxFor(model => model.WeekNum, new { @class = "form-control", @id = "WeekNum" })
+                            <label>Start Date:</label>
+                            @Html.TextBoxFor(model => model.StartDate, "{0:dd/MM/yyyy}", new { @class = "form-controls datepicker", @id = "StartDate" })
+                            <label>End Date:</label>
+                            @Html.TextBoxFor(model => model.EndDate, "{0:dd/MM/yyyy}", new { @class = "form-controls datepicker", @id = "EndDate" })
+                            <input type="submit" value="Submit" class="btn btn-primary" />
+                        </div>
+                    }
+
+                    <h3>Tuần @ViewBag.SelectedWeekNum, năm @ViewBag.SelectedYear:</h3>
+                    <p>Ngày bắt đầu: @ViewBag.ViewModel.StartDateOfWeek.ToString("dd/MM/yyyy")</p>
+                    <p>Ngày kết thúc: @ViewBag.ViewModel.EndDateOfWeek.ToString("dd/MM/yyyy")</p>
+
+                    @if (ViewBag.RevenueStatistics != null && ViewBag.BestSellingProductNames != null && ViewBag.BestSellingQuantities != null)
+                    {
+                        <h3>@ViewBag.TongDoanhThuTuan.ToString("N0") đồng</h3>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ngày bán</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Top 5 sản phẩm bán chạy trong ngày</th>
+                                    <!--<th>Tổng tiền bán</th>--> <!-- Thêm cột mới -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < ViewBag.RevenueStatistics.Count; i++)
+                                {
+                                    var item = ViewBag.RevenueStatistics[i] as RevenueStatistics;
+                                    var productNames = ViewBag.BestSellingProductNames[i] as List<string>;
+                                    var productQuantities = ViewBag.BestSellingQuantities[i] as List<int>;
+                                    var bestSellingProducts = item.BestSellingProducts;
+
+                                    bool isEnoughProducts = productNames != null && productQuantities != null && productNames.Count >= 5;
+
+                                    <tr>
+                                        <td>@item.NgayGiao.ToString("dd/MM/yyyy")</td>
+                                        <td>@String.Format("{0:N0}", item.TongTien)</td>
+                                        @*<td>
+                                                @if (isEnoughProducts)
+                                                {
+                                                    for (int j = 0; j < 5; j++)
+                                                    {
+                                                        <div>@productNames[j] - @productQuantities[j]</div>
+                                                    }
+                                                }
+                                                else if (productNames != null && productQuantities != null && productNames.Count > 0)
+                                                {
+                                                    int numProducts = Math.Min(productNames.Count, 5);
+                                                    for (int j = 0; j < numProducts; j++)
+                                                    {
+                                                        <div>@productNames[j] - @productQuantities[j]</div>
+                                                    }
+                                                }
+                                            </td>*@
+                                        <td>
+                                            @if (bestSellingProducts != null)
+                                            {
+                                                foreach (var product in bestSellingProducts)
+                                                {
+                                                    <div>@product.TenSP - @product.TongTienSP.ToString("N0") đồng</div> <!-- Hiển thị tổng tiền bán của từng sản phẩm -->
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    }
+
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="~/Content/js_admin/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+</body>
+</html>
+<style>
+   
+    .filters {
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-right: 10px;
+    }
+
+   
+    .form-control {
+        width: 80px;
+    }
+
+    .btn-primary {
+        margin-top: auto;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+    .form-controls {
+        
+        width: auto;
+        text-align: center;
+        margin:5px;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: black;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+@*chúng ta đã sử dụng một thư viện JavaScript (trong đoạn mã được thêm vào cuối view) để tạo một datepicker cho các trường ngày.
+    Điều này giúp người dùng dễ dàng chọn ngày trong đúng định dạng và tránh nhập liệu không hợp lệ.*@
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+    <script>
+         // Khởi tạo datepicker khi trang web đã được tải xong (sử dụng jQuery)
+        $(function () {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true
+            });
+        });
+        //tinh năm nhuận
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        }
+         //Đây là một hàm JavaScript để chuyển đổi một đối tượng Date thành một chuỗi ngày tháng năm định dạng 'dd/mm/yyyy'.
+        //Hàm này lấy ngày, tháng và năm từ đối tượng Date và tạo một chuỗi ngày tháng năm theo định dạng mong muốn.
+        function getFormattedDate(date) {
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            return padNumber(day) + '/' + padNumber(month) + '/' + year;
+        }
+        //Đây là một hàm JavaScript để thêm số 0 vào trước một số nếu số đó nhỏ hơn 10.
+        //Hàm này được sử dụng để đảm bảo rằng các số ngày và tháng được hiển thị với hai chữ số.
+        function padNumber(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+        //tháng trong js bắt đầu từ 0
+        function calculateDateRange(weekNum, year) {
+            var startDate, endDate;
+            var januaryFirst = new Date(year, 0, 1);
+            var firstDayOfYear = januaryFirst.getDay();
+            var daysToAdd = (weekNum - 1) * 7 - firstDayOfYear + 2;
+            if (isLeapYear(year)) {
+                daysToAdd += 1; // Nếu là năm nhuận, thì thêm 1 ngày
+            }
+            var start = new Date(year, 0, daysToAdd);//Dòng này tạo một đối tượng Date đại diện cho ngày bắt đầu của khoảng thời gian được tính toán.
+//Đối tượng Date này được tạo bằng cách sử dụng năm và số ngày được tính toán từ tham số weekNum và year.
+
+            var end = new Date(start);
+            end.setDate(end.getDate() + 6);//Dòng này tạo một đối tượng Date đại diện cho ngày kết thúc của khoảng thời gian được tính toán.
+//Đối tượng Date này được tạo bằng cách sử dụng đối tượng start đã được tạo và tăng ngày lên 6 để đến ngày cuối cùng trong tuần.
+
+
+            startDate = getFormattedDate(start);//Dòng này sử dụng hàm getFormattedDate để chuyển đổi đối tượng start và end thành chuỗi ngày tháng năm định dạng 'dd/mm/yyyy'.
+//Kết quả được gán vào biến startDate và endDate.
+            endDate = getFormattedDate(end);
+
+            return {
+                startDate: startDate,
+                endDate: endDate
+            };
+        }
+//        Đây là một hàm để cập nhật ngày bắt đầu và ngày kết thúc dựa trên tuần và năm được chọn.
+//Hàm này lấy giá trị của các phần tử có id WeekNum và Year.
+//Sau đó, hàm gọi hàm calculateDateRange để tính toán khoảng thời gian dựa trên tuần và năm đã chọn.
+//Cuối cùng, hàm gán ngày bắt đầu và ngày kết thúc vào các phần tử có id StartDate và EndDate tương ứng.
+        function updateDateRange() {
+            var selectedWeekNum = $('#WeekNum').val();
+            var selectedYear = $('#Year').val();
+
+            var dateRange = calculateDateRange(selectedWeekNum, selectedYear);
+
+            $('#StartDate').val(dateRange.startDate);
+            $('#EndDate').val(dateRange.endDate);
+        }
+
+        // Update date range on page load
+        updateDateRange();
+
+//       Dòng này gắn một sự kiện "change" cho các phần tử có id WeekNum và Year.
+//Khi giá trị của các phần tử này thay đổi, hàm updateDateRange sẽ được gọi để cập nhật ngày bắt đầu và ngày kết thúc.
+        $('#WeekNum, #Year').on('change', function () {
+            updateDateRange();
+        });
+    </script>
+}
